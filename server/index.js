@@ -8,14 +8,16 @@ const mysql = require("mysql2");
 app.use(express.json());
 app.use(cors());
 
-const pool = mysql
-  .createPool({
-    host: "localhost",
-    user: "root",
-    password: "1234",
-    database: "todoapp",
-  })
-  .promise();
+const pool = process.env.DATABASE_URL
+  ? mysql.createPool(process.env.DATABASE_URL).promise()
+  : mysql
+      .createPool({
+        host: "localhost",
+        user: "root",
+        password: "1234",
+        database: "todoapp",
+      })
+      .promise();
 
 app.get("/", async (req, res) => {
   try {

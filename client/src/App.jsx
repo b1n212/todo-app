@@ -8,7 +8,9 @@ function App() {
   useEffect(() => {
     const fetchTodos = async () => {
       try {
-        const response = await fetch("http://localhost:50001/api/todos");
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/todos`
+        );
         const data = await response.json();
 
         setTodos(data);
@@ -23,13 +25,16 @@ function App() {
     e.preventDefault();
     if (!newTodoTitle) return;
     try {
-      const response = await fetch("http://localhost:5001/api/todos", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title: newTodoTitle }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/todos`,
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title: newTodoTitle }),
+        }
+      );
       const newTodo = await response.json();
 
       setTodos([...todos, newTodo]);
@@ -41,7 +46,7 @@ function App() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:5001/api/todos/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/todos/${id}`, {
         method: "delete",
       });
     } catch (error) {
