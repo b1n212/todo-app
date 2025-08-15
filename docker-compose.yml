@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: todo_db_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234 # DB 루트 비밀번호 설정
+      MYSQL_DATABASE: todoapp # 't
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  server:
+    build: ./server
+    container_name: todo_app_server
+    ports:
+      - "5001:5001"
+    environment:
+      DATABASE_URL: mysql://root:your_password@database:3306/todoapp
+    depends_on:
+      - database
+
+  client:
+    build: ./client
+    container_name: todo_app_client
+
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
+volumes:
+  mysql-data: {}
